@@ -30,7 +30,7 @@ console.log(`script.js: PROJECT_ID is ${PROJECT_ID}`);
 
 
 const publisher = new Redis(process.env.REDIS_SERVICE_URL)
-console.log(process.env.REDIS_SERVICE_URL)
+// console.log(process.env.REDIS_SERVICE_URL)
 
 function publishLog(log){
     publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({log}));

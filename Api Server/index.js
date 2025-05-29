@@ -1,13 +1,34 @@
 import express from 'express';
 import { generateSlug } from 'random-word-slugs';
 import { ECSClient,RunTaskCommand } from '@aws-sdk/client-ecs';
+import Redis from 'ioredis';
+import { Server } from 'socket.io';
+
 import * as dotenv from 'dotenv';
+
 
 // Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 const PORT = 9000;
+
+
+const subscriber = new Redis(process.env.REDIS_SERVICE_URL)
+
+const io = new Server({cors: "*"})
+
+io.on('connection', socket => {
+    socket.on('subscribe', channel => {
+        socket.join(channel);
+        socket.emit('message',`Joined ${channel}`)
+    })
+})
+
+io.listen(9001,() => {
+    console.log("listening on port 9001")
+})
+
 const ecsClient = new ECSClient({
     region: 'ap-south-1',
     credentials: {
@@ -24,8 +45,8 @@ const config = {
 app.use(express.json())
 
 app.post('/project', async (req, res) => {
-    const {gitURL} = req.body
-    const projectSlug  = generateSlug();
+    const {gitURL, slug} = req.body
+    const projectSlug  = slug ? slug :  generateSlug();
 
     const command = new RunTaskCommand({
         cluster: config.cluster,
@@ -64,5 +85,14 @@ app.post('/project', async (req, res) => {
 
 })
 
+async function initRedisSubscribe(){
+    console.log("Subscribed to logs..")
+    subscriber.psubscribe(`logs:*`)
+    subscriber.on('pmessage', (pattern, channel, message) => {
+        io.to(channel).emit('message', message)
+    })
+}
+
+initRedisSubscribe()
 
 app.listen(PORT,() => console.log(`Api Server is running on http://localhost:${PORT}`));
