@@ -1,7 +1,7 @@
 {
-  "name": "build-servers",
+  "name": "reverse-proxy",
   "version": "1.0.0",
-  "main": "script.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.817.0",
-    "dotenv": "^16.5.0",
-    "mime-types": "^3.0.1",
-    "typescript": "^5.8.3"
+    "express": "^5.1.0",
+    "http": "^0.0.1-security",
+    "http-proxy": "^1.18.1"
   }
 }
