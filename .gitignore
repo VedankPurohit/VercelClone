@@ -2,3 +2,5 @@
 Build Servers/.env
 /Api Server/node_modules
 /Reverse Proxy/node_modules
+Api Server/.env
+Reverse Proxy/.env

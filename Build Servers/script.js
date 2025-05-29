@@ -6,6 +6,7 @@ import fs from 'fs';
 // Import necessary for __dirname equivalent in ESM
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import Redis from 'ioredis';
 
 // Corrected: Use PutObjectCommand for single file uploads
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
@@ -19,6 +20,22 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Ensure PROJECT_ID is available
+const PROJECT_ID = process.env.PROJECT_ID;
+if (!PROJECT_ID) {
+    console.error("Error: PROJECT_ID environment variable is not set.");
+    process.exit(1); // Exit if critical variable is missing
+}
+console.log(`script.js: PROJECT_ID is ${PROJECT_ID}`);
+
+
+const publisher = new Redis(process.env.REDIS_SERVICE_URL)
+console.log(process.env.REDIS_SERVICE_URL)
+
+function publishLog(log){
+    publisher.publish(`logs:${PROJECT_ID}`, JSON.stringify({log}));
+}
+
 // Initialize S3 Client
 const s3 = new S3Client({
     region: "eu-north-1",
@@ -29,16 +46,9 @@ const s3 = new S3Client({
     }
 });
 
-// Ensure PROJECT_ID is available
-const PROJECT_ID = process.env.PROJECT_ID;
-if (!PROJECT_ID) {
-    console.error("Error: PROJECT_ID environment variable is not set.");
-    process.exit(1); // Exit if critical variable is missing
-}
-console.log(`script.js: PROJECT_ID is ${PROJECT_ID}`);
-
 
 async function inti() {
+    publishLog("Build Started...");
     console.log('script.js: Executing build process...');
     const outDirPath = path.join(__dirname, "output");
 
@@ -57,20 +67,32 @@ async function inti() {
 
     p.stdout.on('data', (data) => {
         console.log(`script.js (stdout): ${data.toString().trim()}`);
+        publishLog(data.toString().trim());
     });
 
     // Corrected: stderr emits 'data' events for output, not 'error' events for regular messages
     p.stderr.on('data', (data) => {
         console.error(`script.js (stderr): ${data.toString().trim()}`);
+        publishLog(data.toString().trim());
+        
     });
+
+    p.stdout.on("error", function(data){
+        console.error(`script.js (Error): ${data.toString().trim()}`);
+        publishLog(`error: ${data.toString().trim()}`);
+    })
 
     p.on('close', async function (code) {
         console.log(`script.js: Child process exited with code ${code}`);
 
         if (code !== 0) {
             console.error(`script.js: Build process failed with exit code ${code}. Aborting upload.`);
+            publishLog(`Build process failed with exit code ${code}. Aborting upload.`);
             process.exit(1);
         }
+
+        publishLog("Build Complete");
+
 
         const distFolderPath = path.join(outDirPath, "dist"); // dist is inside output
         console.log(`script.js: Checking for built files in: ${distFolderPath}`);
@@ -86,7 +108,7 @@ async function inti() {
         if (distFolderContents.length === 0) {
             console.warn("script.js: No files found in 'dist' folder to upload.");
         }
-
+        publishLog(`Starting to upload`)
         for (const fileSPath of distFolderContents) {
             const file = path.join(distFolderPath, fileSPath);
 
@@ -97,6 +119,7 @@ async function inti() {
             }
 
             console.log(`script.js: Uploading file: ${fileSPath}`);
+            publishLog(`Uploading file: ${fileSPath}`);
 
             try {
                 const command = new PutObjectCommand({
@@ -107,13 +130,16 @@ async function inti() {
                 });
                 await s3.send(command);
                 console.log(`script.js: Successfully uploaded: ${fileSPath}`);
+                publishLog(`Successfully uploaded: ${fileSPath}`);
             } catch (s3Error) {
                 console.error(`script.js: Error uploading ${fileSPath}:`, s3Error);
+                publishLog(`Error uploading ${fileSPath}:`, s3Error);
                 // Decide whether to exit or continue on individual file upload errors
                 // For now, we'll log and continue, but you might want to exit.
             }
         }
         console.log("script.js: All operations completed.");
+        publishLog("Done");
     });
 
     p.on('error', (err) => {
