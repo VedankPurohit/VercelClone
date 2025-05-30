@@ -1,6 +1,7 @@
 import express, { urlencoded } from 'express';
 import httpProxy from 'http-proxy';
 
+
 import * as dotenv from 'dotenv';
 
 // Load environment variables from .env file
@@ -19,6 +20,7 @@ app.use((req, res) => {
     const subdomain = hostname.split('.')[0];
     
     const resolvesto = `${BASE_PATH}/${subdomain}`;
+    console.log(resolvesto)
     return proxy.web(req, res, { target: resolvesto, changeOrigin: true });
 });
 

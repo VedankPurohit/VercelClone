@@ -4,3 +4,6 @@ Build Servers/.env
 /Reverse Proxy/node_modules
 Api Server/.env
 Reverse Proxy/.env
+Api Server/prisma/ca.pem
+Build Servers/kafka.pem
+Api Server/kafka.pem
