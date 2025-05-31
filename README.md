@@ -2,20 +2,19 @@
 
 ## Table of Contents
 
-  * [About the Project](https://www.google.com/search?q=%23about-the-project)
-  * [Features](https://www.google.com/search?q=%23features)
-  * [Architecture](https://www.google.com/search?q=%23architecture)
-  * [Getting Started](https://www.google.com/search?q=%23getting-started)
-      * [Prerequisites](https://www.google.com/search?q=%23prerequisites)
-      * [Environment Variables](https://www.google.com/search?q=%23environment-variables)
-      * [AWS Setup](https://www.google.com/search?q=%23aws-setup)
-      * [Docker Image Setup](https://www.google.com/search?q=%23docker-image-setup)
-      * [Running Locally](https://www.google.com/search?q=%23running-locally)
-  * [Project Structure](https://www.google.com/search?q=%23project-structure)
-  * [Contributing](https://www.google.com/search?q=%23contributing)
-  * [License](https://www.google.com/search?q=%23license)
-  * [Contact](https://www.google.com/search?q=%23contact)
-
+  * [About the Project]
+  * [Features]
+  * [Architecture]
+  * [Getting Started]
+      * [Prerequisites]
+      * [Environment Variables]
+      * [AWS Setup]
+      * [Docker Image Setup]
+      * [Running Locally]
+  * [Project Structure]
+  * [Contributing]
+  * [License]
+  * [Contact]
 -----
 
 ## About the Project
