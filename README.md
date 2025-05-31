@@ -1,7 +1,3 @@
-Okay, here's a `README.md` for your VercelClone project, designed to be clear, informative, and easy for others to understand and potentially set up. I've structured it to explain the project, its architecture, and provide clear setup instructions. Remember to replace placeholders like `[YOUR_ECR_REPO_URL]` with your actual information.
-
------
-
 # VercelClone: Cloud-Native Web Deployment Platform
 
 ## Table of Contents
@@ -284,5 +280,3 @@ This project is licensed under the MIT License - see the [LICENSE](https://www.g
 Vedank Purohit - [vedankpurohit@gmail.com](mailto:vedankpurohit@gmail.com)
 LinkedIn: [VedankPurohit](https://www.linkedin.com/in/vedankpurohit)
 Project Link: [https://github.com/VedankPurohit/VercelClone](https://github.com/VedankPurohit/VercelClone)
-
------
