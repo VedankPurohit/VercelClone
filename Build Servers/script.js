@@ -63,7 +63,7 @@ async function publishLog(log){
 
 // Initialize S3 Client
 const s3 = new S3Client({
-    region: "eu-north-1",
+    region: "ap-south-1",
     // Corrected: 'Credentials' should be 'credentials' (lowercase 'c')
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
