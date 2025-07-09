@@ -270,10 +270,6 @@ vercelclone/
 
 Contributions are welcome\! If you find a bug or want to add a feature, please open an issue or submit a pull request.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details. (If you have one, otherwise remove)
-
 ## Contact
 
 Vedank Purohit - [vedankpurohit@gmail.com](mailto:vedankpurohit@gmail.com)
